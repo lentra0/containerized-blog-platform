@@ -1,0 +1,23 @@
+{
+  "name": "cloud-blog-frontend",
+  "version": "1.0.0",
+  "private": true,
+  "scripts": {
+    "dev": "next dev",
+    "build": "next build",
+    "start": "next start"
+  },
+  "dependencies": {
+    "next": "^13.0.0",
+    "react": "^18.0.0",
+    "react-dom": "^18.0.0",
+    "axios": "^1.0.0"
+  },
+  "devDependencies": {
+    "typescript": "^4.8.4",
+    "@types/react": "^18.0.15",
+    "@types/react-dom": "^18.0.6",
+    "@types/node": "^18.7.23",
+    "@types/axios": "^0.14.0"
+  }
+}
