@@ -89,13 +89,13 @@ A full-stack **Cloud-Based Blog Platform** showcasing:
 │       └── scripts         # Backup scripts
 ├── frontend                # Next.js application
 │   ├── Dockerfile          
-│   ├── pages              # React pages
-│   └── components         # Reusable components
-├── kubernetes             # K8s manifests
-├── docker-compose.yml     # Local orchestration
-├── .github/workflows      # CI pipeline
-├── docs/images            # Documentation and screenshots
-└── README.md              # Project docs
+│   ├── pages               # React pages
+│   └── components          # Reusable components
+├── kubernetes              # K8s manifests
+├── docker-compose.yml      # Local orchestration
+├── .github/workflows       # CI pipeline
+├── docs/images             # Documentation and screenshots
+└── README.md               # Project docs
 ```
 
 ---
