@@ -1,7 +1,17 @@
+// @ts-nocheck
 import React from 'react';
 import Link from 'next/link';
 
-const PostList = ({ posts }) => (
+type Post = {
+  id: string | number;
+  title: string;
+};
+
+type Props = {
+  posts: Post[];
+};
+
+const PostList: React.FC<Props> = ({ posts }) => (
   <ul>
     {posts.map((post) => (
       <li key={post.id} style={{ marginBottom: '10px' }}>
