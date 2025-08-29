@@ -90,7 +90,7 @@ jobs:
 
       - name: Start minikube
         run: |
-          sudo minikube start --driver=docker --memory=4096 --cpus=2
+          minikube start --driver=docker --force --memory=4096 --cpus=2
 
       - name: Build and load backend image into minikube
         run: |
@@ -121,8 +121,8 @@ jobs:
 
       - name: Update manifests to use CI images and apply
         run: |
-          sed -i "s|image: cloud-blog-backend:0.1.0|image: blog-backend:ci|g" kubernetes/backend-deployment.yaml || true
-          sed -i "s|image: cloud-blog-frontend:0.1.0|image: blog-frontend:ci|g" kubernetes/frontend-deployment.yaml || true
+          sed -i "s|image: blog-backend:0.1.0|image: blog-backend:ci|g" kubernetes/backend-deployment.yaml || true
+          sed -i "s|image: blog-frontend:0.1.0|image: blog-frontend:ci|g" kubernetes/frontend-deployment.yaml || true
           kubectl apply -f kubernetes/
 
       - name: Wait for rollouts
