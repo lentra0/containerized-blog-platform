@@ -1,13 +1,20 @@
-FROM node:16-alpine
+FROM node:18.20-alpine AS builder
 WORKDIR /app
 
-# Install dependencies
-COPY package.json .
-RUN npm install
-
-# Copy source and build
+COPY package.json package-lock.json* ./
+RUN npm ci --silent
 COPY . .
 RUN npm run build
 
+FROM node:18.20-alpine AS runner
+WORKDIR /app
+
+RUN addgroup -S app && adduser -S app -G app
+
+COPY --from=builder /app .
+
+USER app
+
 EXPOSE 3000
-CMD ["npm", "start"] 
+ENV NODE_ENV=production
+CMD ["npm", "start"]

@@ -13,22 +13,18 @@ jobs:
     runs-on: ubuntu-latest
     services:
       postgres:
-        image: postgres:13
+        image: postgres:13-alpine
         env:
           POSTGRES_USER: postgres
-          POSTGRES_PASSWORD: postgres
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
           POSTGRES_DB: postgres
-        ports:
-          - 5432:5432
         options: >-
           --health-cmd "pg_isready -U postgres -d postgres -h localhost"
           --health-interval 5s
           --health-timeout 2s
           --health-retries 30
       redis:
-        image: redis:6
-        ports:
-          - 6379:6379
+        image: redis:6.2-alpine
     steps:
       - uses: actions/checkout@v3
 
@@ -56,3 +52,52 @@ jobs:
           tags: |
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/frontend:latest
             ${{ env.REGISTRY }}/${{ env.IMAGE_NAMESPACE }}/frontend:${{ github.sha }}
+
+  deploy:
+    runs-on: ubuntu-latest
+    needs: build
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v3
+
+      - name: Install kubectl
+        uses: azure/setup-kubectl@v3
+        with:
+          version: 'latest'
+
+      - name: Install minikube
+        run: |
+          curl -Lo minikube https://storage.googleapis.com/minikube/releases/latest/minikube-linux-amd64
+          sudo install minikube /usr/local/bin/minikube
+
+      - name: Start minikube
+        run: |
+          sudo minikube start --driver=docker --memory=4096 --cpus=2
+
+      - name: Build and load backend image into minikube
+        run: |
+          docker build -t cloud-blog-backend:ci ./backend
+          minikube image load cloud-blog-backend:ci
+
+      - name: Build and load frontend image into minikube
+        run: |
+          docker build -t cloud-blog-frontend:ci ./frontend
+          minikube image load cloud-blog-frontend:ci
+
+      - name: Update manifests to use CI images and apply
+        run: |
+          sed -i "s|image: cloud-blog-backend:0.1.0|image: cloud-blog-backend:ci|g" kubernetes/backend-deployment.yaml || true
+          sed -i "s|image: cloud-blog-frontend:0.1.0|image: cloud-blog-frontend:ci|g" kubernetes/frontend-deployment.yaml || true
+          kubectl apply -f kubernetes/
+
+      - name: Wait for rollouts
+        run: |
+          kubectl rollout status deployment/backend --timeout=120s || true
+          kubectl rollout status deployment/frontend --timeout=120s || true
+
+      - name: Show Minikube IP and resource status
+        run: |
+          echo "Minikube IP: $(minikube ip)"
+          kubectl get nodes -o wide
+          kubectl get pods --all-namespaces -o wide
+          kubectl get svc --all-namespaces -o wide

@@ -122,13 +122,14 @@ A full-stack **Cloud-Based Blog Platform** showcasing:
    ```bash
    docker-compose up --build -d
    ```
+  Copy `.env.example` to `.env` and populate it before running.
 2. **Frontend**: open http://localhost:3000
-3. **Register** a new user: click "Switch to Register", enter username and password, and click "Register".
-4. **Login**: switch to Login mode, enter credentials, and click "Login". You should see a success message.
+3. **Register** a new user: switch to Register mode, provide a username and password, and submit the form.
+4. **Login**: switch to Login mode, provide credentials, and submit the form. A success message is displayed on successful authentication.
 5. **Admin Panel**: open http://localhost:3000/admin and create new posts.
 6. **Browse Posts**: view all posts on the main page.
 
-*If any API call shows an error, ensure the backend is running at http://localhost:8000 (`docker-compose ps`) and retry.*
+*If API calls fail, verify the backend is running at http://localhost:8000 (`docker-compose ps`) and retry.*
 
 ---
 
@@ -142,6 +143,7 @@ A full-stack **Cloud-Based Blog Platform** showcasing:
    ```bash
    kubectl apply -f kubernetes/
    ```
+  The `kubernetes/` folder contains templates for `Secrets`, `ConfigMaps`, and a `PersistentVolumeClaim` for Postgres.
 3. Access services via `minikube ip`:
    - Frontend: `http://<minikube_ip>`
    - API: `http://<minikube_ip>/api`
@@ -190,6 +192,8 @@ Frontend:
 - **Create Post**: `POST /api/posts` with JSON `{ title, content }`, requires JWT.
 - **Delete Post**: `DELETE /api/posts/{post_id}`; no authentication required; returns `204 No Content`.
 
+Security note: The Delete Post endpoint currently allows unauthenticated deletes. This is unsafe — consider requiring authorization/ownership checks. See `backend/routers/posts.py` to fix.
+
 ---
 
 ## 📸 Screenshots
@@ -226,4 +230,4 @@ Frontend:
 
 ---
 
-*Made by @lentra0*
+*Author: @lentra0*
