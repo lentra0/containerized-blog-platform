@@ -14,7 +14,7 @@ spec:
     spec:
       containers:
       - name: backend
-        image: cloud-blog-backend:0.1.0
+        image: blog-backend:0.1.0
         imagePullPolicy: IfNotPresent
         envFrom:
         - secretRef:

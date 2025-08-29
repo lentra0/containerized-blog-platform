@@ -1,5 +1,11 @@
 name: CI Pipeline
 
+permissions:
+  contents: read
+  packages: write
+  id-token: write
+  pull-requests: write
+
 on:
   push:
     branches: [ main ]
@@ -11,6 +17,7 @@ env:
 jobs:
   build:
     runs-on: ubuntu-latest
+  timeout-minutes: 60
     services:
       postgres:
         image: postgres:13-alpine
@@ -27,6 +34,17 @@ jobs:
         image: redis:6.2-alpine
     steps:
       - uses: actions/checkout@v3
+
+      - name: Set up QEMU
+        uses: docker/setup-qemu-action@v2
+
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      - name: Docker info
+        run: |
+          docker version
+          docker info
 
       - name: Log in to GHCR
         uses: docker/login-action@v2
@@ -76,18 +94,35 @@ jobs:
 
       - name: Build and load backend image into minikube
         run: |
-          docker build -t cloud-blog-backend:ci ./backend
-          minikube image load cloud-blog-backend:ci
+          docker build -t blog-backend:ci ./backend
+          minikube image load blog-backend:ci
 
       - name: Build and load frontend image into minikube
         run: |
-          docker build -t cloud-blog-frontend:ci ./frontend
-          minikube image load cloud-blog-frontend:ci
+          docker build -t blog-frontend:ci ./frontend
+          minikube image load blog-frontend:ci
+
+      - name: Create Kubernetes secrets in Minikube
+        env:
+          POSTGRES_PASSWORD: ${{ secrets.POSTGRES_PASSWORD }}
+          GF_PASSWORD: ${{ secrets.GF_SECURITY_ADMIN_PASSWORD }}
+        run: |
+          kubectl create secret generic postgres-secrets \
+            --from-literal=POSTGRES_PASSWORD="${POSTGRES_PASSWORD}" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl create secret generic backend-secrets \
+            --from-literal=DATABASE_URL="postgresql://postgres:${POSTGRES_PASSWORD}@postgres:5432/postgres" \
+            --dry-run=client -o yaml | kubectl apply -f -
+
+          kubectl create secret generic grafana-secrets \
+            --from-literal=GF_SECURITY_ADMIN_PASSWORD="${GF_PASSWORD}" \
+            --dry-run=client -o yaml | kubectl apply -f -
 
       - name: Update manifests to use CI images and apply
         run: |
-          sed -i "s|image: cloud-blog-backend:0.1.0|image: cloud-blog-backend:ci|g" kubernetes/backend-deployment.yaml || true
-          sed -i "s|image: cloud-blog-frontend:0.1.0|image: cloud-blog-frontend:ci|g" kubernetes/frontend-deployment.yaml || true
+          sed -i "s|image: cloud-blog-backend:0.1.0|image: blog-backend:ci|g" kubernetes/backend-deployment.yaml || true
+          sed -i "s|image: cloud-blog-frontend:0.1.0|image: blog-frontend:ci|g" kubernetes/frontend-deployment.yaml || true
           kubectl apply -f kubernetes/
 
       - name: Wait for rollouts

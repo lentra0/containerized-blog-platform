@@ -1,4 +1,4 @@
-# 🚀 Cloud-Based Blog Platform
+# 🚀 Containerized Blog Platform
 
 <p align="center">
   <a href="#">
@@ -44,7 +44,7 @@
 
 ## 📄 Project Overview
 
-A full-stack **Cloud-Based Blog Platform** showcasing:
+A full-stack **Containerized Blog Platform** showcasing:
 
 - **Frontend**: Next.js (TypeScript)
 - **Backend**: FastAPI (Python)
@@ -110,7 +110,7 @@ A full-stack **Cloud-Based Blog Platform** showcasing:
 - Local development with Docker Compose
 - Kubernetes manifests for production-like environment
 - Continuous integration & testing
-- DB backup script (pg_dump + S3 upload)
+- DB backup script (pg_dump; optional S3 upload)
 
 ---
 
@@ -163,13 +163,13 @@ On pushes to `main`, GitHub Actions will:
 
 ## 🗄️ Database Backups
 
-Run the backup script:
+Run the backup script (saves a local copy):
 
 ```bash
 bash backend/app/scripts/backup.sh
 ```
 
-Backups are stored in `backups/`. For S3 upload, set `AWS_BUCKET` and AWS credentials in `.env`.
+Backups are stored locally in `backups/` by default. Optional: to upload backups to S3 or an S3-compatible storage, set `AWS_BUCKET` and AWS credentials in `.env` (the upload step is skipped when `AWS_BUCKET` is not set).
 
 ---
 

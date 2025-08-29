@@ -1,7 +1,6 @@
 from .config import settings
 from sqlalchemy import create_engine
 from sqlalchemy.orm import sessionmaker
-import redis
 
 # SQLAlchemy engine and session
 engine = create_engine(settings.DATABASE_URL, echo=settings.SQL_ECHO)
@@ -13,14 +12,6 @@ def get_db():
         yield db
     finally:
         db.close()
-
-# Redis client
-def get_redis():
-    r = redis.from_url(settings.REDIS_URL)
-    try:
-        yield r
-    finally:
-        pass
 
 # OAuth2 JWT authentication dependencies
 from fastapi import Depends, HTTPException, status

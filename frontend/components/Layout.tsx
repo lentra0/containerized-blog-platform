@@ -22,7 +22,7 @@ const Layout = ({ children }: LayoutProps) => {
   return (
     <>
       <Head>
-        <title>Cloud Blog Platform</title>
+        <title>Containerized Blog Platform</title>
       </Head>
       <nav style={{ marginBottom: '20px', display: 'flex', justifyContent: 'space-between' }}>
         <div>

@@ -9,7 +9,7 @@ from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
 
 app = FastAPI(
-    title="Cloud-Based Blog Platform API"
+    title="Containerized Blog Platform API"
 )
 
 # CORS
