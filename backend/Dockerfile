@@ -16,11 +16,6 @@ WORKDIR /app
 COPY requirements.txt .
 RUN chown -R app:app /app
 
-USER app
-
-EXPOSE 8000
-
-ENV PYTHONUNBUFFERED=1
 COPY app ./app
 
 RUN chown -R app:app /app
