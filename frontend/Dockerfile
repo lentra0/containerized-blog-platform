@@ -2,7 +2,7 @@ FROM node:18.20-alpine AS builder
 WORKDIR /app
 
 COPY package.json package-lock.json* ./
-RUN npm ci --silent
+RUN npm install --no-audit --no-fund --silent
 COPY . .
 RUN npm run build
 
