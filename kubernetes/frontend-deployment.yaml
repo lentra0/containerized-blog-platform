@@ -14,8 +14,8 @@ spec:
     spec:
       containers:
       - name: frontend
-        image: blog-frontend:0.1.0
-        imagePullPolicy: IfNotPresent
+        image: ghcr.io/lentra0/frontend:latest
+        imagePullPolicy: Always
         envFrom:
         - configMapRef:
             name: frontend-config
@@ -30,16 +30,21 @@ spec:
             memory: "256Mi"
         readinessProbe:
           httpGet:
-            path: /_next/static/
+            path: /
             port: 3000
-          initialDelaySeconds: 5
+          initialDelaySeconds: 10
           periodSeconds: 10
+          timeoutSeconds: 5
+          successThreshold: 1
+          failureThreshold: 3
         livenessProbe:
           httpGet:
-            path: /_next/static/
+            path: /
             port: 3000
           initialDelaySeconds: 30
+          periodSeconds: 10
           timeoutSeconds: 5
+          failureThreshold: 3
         securityContext:
           runAsNonRoot: true
           runAsUser: 1000
