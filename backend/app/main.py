@@ -7,12 +7,16 @@ from .crud.crud import get_user_by_username, create_user
 from .schemas.schemas import UserCreate
 from fastapi.middleware.cors import CORSMiddleware
 from prometheus_fastapi_instrumentator import Instrumentator
+import asyncio
+import logging
+from sqlalchemy.exc import OperationalError
+
+logger = logging.getLogger(__name__)
 
 app = FastAPI(
     title="Containerized Blog Platform API"
 )
 
-# CORS
 app.add_middleware(
     CORSMiddleware,
     allow_origins=["http://localhost:3000"],
@@ -21,23 +25,38 @@ app.add_middleware(
     allow_headers=["*"],
 )
 
-# Instrumentation
 Instrumentator().instrument(app).expose(app)
 
-# Initialize database tables
+@app.get("/health")
+async def health():
+    return {"status": "ok"}
+
 def create_tables():
     Base.metadata.create_all(bind=engine)
 
 @app.on_event("startup")
 async def on_startup():
-    create_tables()
-    # ensure anonymous user exists
-    db = SessionLocal()
-    try:
-        if not get_user_by_username(db, 'Anonymous'):
-            create_user(db, UserCreate(username='Anonymous', password=''))
-    finally:
-        db.close()
+    # Retry logic for database initialization to avoid crashing when Postgres is not yet ready
+    max_retries = 10
+    delay_seconds = 3
+
+    for attempt in range(1, max_retries + 1):
+        try:
+            create_tables()
+            db = SessionLocal()
+            try:
+                if not get_user_by_username(db, 'Anonymous'):
+                    create_user(db, UserCreate(username='Anonymous', password=''))
+            finally:
+                db.close()
+            logger.info("Database ready and startup seeding complete")
+            break
+        except OperationalError as e:
+            logger.warning(f"Database not ready (attempt {attempt}/{max_retries}): {e}")
+            if attempt == max_retries:
+                logger.exception("Exceeded maximum retries waiting for the database")
+                raise
+            await asyncio.sleep(delay_seconds)
 
 # Register routers
 app.include_router(auth.router)
