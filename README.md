@@ -1,4 +1,4 @@
-# 🚀 Containerized Blog Platform
+# Containerized Blog Platform
 
 <p align="center">
   <a href="#">
@@ -26,23 +26,23 @@
 
 ---
 
-## 🔍 Table of Contents
+## Table of Contents
 
-- [📄 Project Overview](#project-overview)
-- [🛠️ Tech Stack](#tech-stack)
-- [📁 Repo Structure](#repo-structure)
-- [⚙️ Features](#features)
-- [🐳 Local Development](#local-development)
-- [☸️ Kubernetes Deployment](#kubernetes-deployment)
-- [📦 CI/CD Pipeline](#ci-cd-pipeline)
-- [🗄️ Database Backups](#database-backups)
-- [🔑 Authentication](#authentication)
-- [📸 Screenshots](#screenshots)
-- [📈 Monitoring](#monitoring)
+- [Project Overview](#project-overview)
+- [Tech Stack](#tech-stack)
+- [Repo Structure](#repo-structure)
+- [Features](#features)
+- [Local Development](#local-development)
+- [Kubernetes Deployment](#kubernetes-deployment)
+- [CI/CD Pipeline](#ci-cd-pipeline)
+- [Database Backups](#database-backups)
+- [Authentication](#authentication)
+- [Screenshots](#screenshots)
+- [Monitoring](#monitoring)
 
 ---
 
-## 📄 Project Overview
+## Project Overview
 
 A full-stack **Containerized Blog Platform** showcasing:
 
@@ -58,7 +58,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## 🛠️ Tech Stack
+## Tech Stack
 
 <p align="center">
   <img src="https://raw.githubusercontent.com/simple-icons/simple-icons/develop/icons/fastapi.svg" alt="FastAPI" width="40" />
@@ -72,7 +72,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## 📁 Repo Structure
+## Repo Structure
 
 ```
 .
@@ -100,7 +100,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## ⚙️ Features
+## Features
 
 - User registration & JWT authentication
 - CRUD posts (create, read, delete), comments, likes
@@ -114,7 +114,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## 🐳 Local Development
+## Local Development
 
 **Prerequisites**: Docker & docker-compose
 
@@ -133,7 +133,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## ☸️ Kubernetes Deployment
+## Kubernetes Deployment
 
 1. Enable ingress:
    ```bash
@@ -150,7 +150,7 @@ A full-stack **Containerized Blog Platform** showcasing:
 
 ---
 
-## 📦 CI/CD Pipeline
+## CI/CD Pipeline
 
 On pushes to `main`, GitHub Actions will:
 
@@ -161,7 +161,7 @@ On pushes to `main`, GitHub Actions will:
 
 ---
 
-## 🗄️ Database Backups
+## Database Backups
 
 Run the backup script (saves a local copy):
 
@@ -173,7 +173,7 @@ Backups are stored locally in `backups/` by default. Optional: to upload backups
 
 ---
 
-## 🔑 Authentication
+## Authentication
 
 This platform uses JSON Web Tokens (JWT) for user authentication:
 
@@ -185,7 +185,7 @@ Frontend:
 - The `/login` page provides forms to register and log in; on login, the JWT token is stored in `localStorage` and added to Axios headers.
 - Protected actions (creating posts, comments, likes) require the JWT in the `Authorization` header.
 
-## 🗂️ Posts API
+## Posts API
 
 - **List Posts**: `GET /api/posts` returns all posts.
 - **Get Post**: `GET /api/posts/{post_id}` returns a single post.
@@ -196,7 +196,7 @@ Security note: The Delete Post endpoint currently allows unauthenticated deletes
 
 ---
 
-## 📸 Screenshots
+## Screenshots
 
 ### Home Page
 <p align="center">
@@ -220,7 +220,7 @@ Security note: The Delete Post endpoint currently allows unauthenticated deletes
 
 ---
 
-## 📈 Monitoring
+## Monitoring
 
 - **Prometheus**: http://localhost:9090 — metrics and alerting UI
 - **Grafana**: http://localhost:3001 — dashboards (default login: `admin` / `admin`)
