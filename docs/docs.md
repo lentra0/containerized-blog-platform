@@ -1,18 +1,18 @@
-# 📚 Project Documentation
+# Project Documentation
 
 ## Table of Contents
 
-- [🖥️ Services & Ports](#️-services--ports)
-- [🚀 Frontend](#-frontend)
-- [🛠️ Backend API](#️-backend-api)
-- [🗄️ Database & Cache](#️-database--cache)
-- [📈 Monitoring](#️-monitoring)
-- [🐞 Troubleshooting](#️-troubleshooting)
-- [📸 Screenshots & Embedding](#️-screenshots--embedding)
+- [Services & Ports](#️-services--ports)
+- [Frontend](#-frontend)
+- [Backend API](#️-backend-api)
+- [Database & Cache](#️-database--cache)
+- [Monitoring](#️-monitoring)
+- [Troubleshooting](#️-troubleshooting)
+- [Screenshots & Embedding](#️-screenshots--embedding)
 
 ---
 
-## 🖥️ Services & Ports
+## Services & Ports
 
 | Service             | Description                              | Port    | URL                              |
 |---------------------|------------------------------------------|--------:|----------------------------------|
@@ -28,7 +28,7 @@
 
 ---
 
-## 🚀 Frontend
+## Frontend
 
 The frontend is built with **Next.js** and can run either via:
 
@@ -52,7 +52,7 @@ The frontend is built with **Next.js** and can run either via:
 
 ---
 
-## 🛠️ Backend API
+## Backend API
 
 The backend uses **FastAPI**, exposing the following endpoints:
 
@@ -104,7 +104,7 @@ Connection strings are configured via environment variables in `.env` or `docker
 
 ---
 
-## 📈 Monitoring
+## Monitoring
 
 - **Backend metrics**: exposed automatically at `/metrics` via `prometheus-fastapi-instrumentator`.
 - **Prometheus**:
